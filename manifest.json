@@ -1,11 +1,11 @@
 {
-	"id": "obsidian-sample-plugin",
-	"name": "Sample Plugin",
+	"id": "obsidian-markdown-blogger",
+	"name": "Markdown Blogger",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "This is a sample plugin for Obsidian. This plugin demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
-	"isDesktopOnly": false
+	"description": "This plug-in allows developers to upload markdown notes to their web-based blog in one-click. It is meant to be used with Astro.js, Next.js, or any other framework configured to render markdown pages.",
+	"author": "Alexa Fazio",
+	"authorUrl": "https://github.com/afazio1",
+	"fundingUrl": "https://www.alexafazio.dev",
+	"isDesktopOnly": true
 }

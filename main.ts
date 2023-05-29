@@ -3,23 +3,28 @@ import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Set
 // Remember to rename these classes and interfaces!
 
 interface MyPluginSettings {
-	mySetting: string;
+	obsidianFolder: string;
+	projectFolder: string;
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: 'default'
+	obsidianFolder: 'blog/',
+	projectFolder: '/Users/'
+
 }
+import { Menu } from "obsidian";
 
 export default class MyPlugin extends Plugin {
 	settings: MyPluginSettings;
 
 	async onload() {
+		console.log("loading plugin");
 		await this.loadSettings();
 
 		// This creates an icon in the left ribbon.
 		const ribbonIconEl = this.addRibbonIcon('dice', 'Sample Plugin', (evt: MouseEvent) => {
 			// Called when the user clicks the icon.
-			new Notice('This is a notice!');
+			new SampleModal(this.app).open();
 		});
 		// Perform additional things with the ribbon
 		ribbonIconEl.addClass('my-plugin-ribbon-class');
@@ -64,6 +69,20 @@ export default class MyPlugin extends Plugin {
 				}
 			}
 		});
+		this.addCommand({
+			id: 'example-command',
+			name: 'Example command',
+			editorCallback: (editor: Editor, view: MarkdownView) => {
+				const lines = editor.lineCount()
+				let text = "";
+				for (let i = 0; i < lines; i++) {
+					text += editor.getLine(i) + "\n";
+				}
+
+
+				new Notice(`You have selected: ${text}`);
+			},
+		});
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new SampleSettingTab(this.app, this));
@@ -79,7 +98,7 @@ export default class MyPlugin extends Plugin {
 	}
 
 	onunload() {
-
+		console.log("unloading plugin");
 	}
 
 	async loadSettings() {
@@ -120,17 +139,26 @@ class SampleSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
+		containerEl.createEl('h2', {text: 'Settings for Obsidian Markdown Blogger.'});
 
 		new Setting(containerEl)
-			.setName('Setting #1')
-			.setDesc('It\'s a secret')
+			.setName('Obsidian Blog Folder Path')
+			.setDesc('The Obsidian folder you keep your md blog posts in.')
 			.addText(text => text
-				.setPlaceholder('Enter your secret')
-				.setValue(this.plugin.settings.mySetting)
+				.setPlaceholder('blog/posts')
+				.setValue(this.plugin.settings.obsidianFolder)
 				.onChange(async (value) => {
-					console.log('Secret: ' + value);
-					this.plugin.settings.mySetting = value;
+					this.plugin.settings.obsidianFolder = value;
+					await this.plugin.saveSettings();
+				}));
+		new Setting(containerEl)
+			.setName('Actual Blog Folder Path')
+			.setDesc('The project folder of your blog. Must be an absolute path.')
+			.addText(text => text
+				.setPlaceholder('/Users/johnsample/code-projects/astro-blog/collections')
+				.setValue(this.plugin.settings.projectFolder)
+				.onChange(async (value) => {
+					this.plugin.settings.projectFolder = value;
 					await this.plugin.saveSettings();
 				}));
 	}
