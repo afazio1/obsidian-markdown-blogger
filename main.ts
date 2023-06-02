@@ -1,4 +1,6 @@
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import * as fs from "fs";
+import * as path from "path";
 
 // Remember to rename these classes and interfaces!
 
@@ -12,7 +14,6 @@ const DEFAULT_SETTINGS: MyPluginSettings = {
 	projectFolder: '/Users/'
 
 }
-import { Menu } from "obsidian";
 
 export default class MyPlugin extends Plugin {
 	settings: MyPluginSettings;
@@ -70,17 +71,40 @@ export default class MyPlugin extends Plugin {
 			}
 		});
 		this.addCommand({
-			id: 'example-command',
-			name: 'Example command',
+			id: 'push-md-command',
+			name: 'Push Markdown command',
 			editorCallback: (editor: Editor, view: MarkdownView) => {
 				const lines = editor.lineCount()
 				let text = "";
 				for (let i = 0; i < lines; i++) {
 					text += editor.getLine(i) + "\n";
 				}
+				const { obsidianFolder, projectFolder } = this.settings;
 
+				try {
+					fs.writeFileSync(`${projectFolder}${view.file.name}`, text);
+					new Notice(`Your file has been created! At ${projectFolder}${view.file.name}`);
+				} catch (err) {
+					new Notice(err.message);
+					console.error(err);
+				}
+			},
+		});
 
-				new Notice(`You have selected: ${text}`);
+		this.addCommand({
+			id: 'pull-md-command',
+			name: 'Pull Markdown command',
+			editorCheckCallback: (checking: boolean, editor: Editor, view: MarkdownView) => {
+				const projectBlogPath = path.resolve(this.settings.projectFolder, view.file.name);
+				
+				if (fs.existsSync(projectBlogPath)) {
+					// do command
+					new Notice(path.normalize("./" + view.file.path));
+					// fs.writeFileSync(view.file.path)
+					return true;
+				}
+
+				return false;
 			},
 		});
 
