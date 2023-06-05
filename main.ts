@@ -2,91 +2,52 @@ import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Set
 import * as fs from "fs";
 import * as path from "path";
 
-// Remember to rename these classes and interfaces!
-
-interface MyPluginSettings {
-	obsidianFolder: string;
+interface MarkdownBloggerSettings {
 	projectFolder: string;
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
-	obsidianFolder: 'blog/',
-	projectFolder: '/Users/'
+const DEFAULT_SETTINGS: MarkdownBloggerSettings = {
+	projectFolder: ''
 
 }
 
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+export default class MarkdownBlogger extends Plugin {
+	settings: MarkdownBloggerSettings;
 
 	async onload() {
-		console.log("loading plugin");
 		await this.loadSettings();
 
-		// This creates an icon in the left ribbon.
-		const ribbonIconEl = this.addRibbonIcon('dice', 'Sample Plugin', (evt: MouseEvent) => {
-			// Called when the user clicks the icon.
-			new SampleModal(this.app).open();
-		});
-		// Perform additional things with the ribbon
-		ribbonIconEl.addClass('my-plugin-ribbon-class');
-
-		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
-		const statusBarItemEl = this.addStatusBarItem();
-		statusBarItemEl.setText('Status Bar Text');
-
-		// This adds a simple command that can be triggered anywhere
 		this.addCommand({
-			id: 'open-sample-modal-simple',
-			name: 'Open sample modal (simple)',
-			callback: () => {
-				new SampleModal(this.app).open();
-			}
-		});
-		// This adds an editor command that can perform some operation on the current editor instance
-		this.addCommand({
-			id: 'sample-editor-command',
-			name: 'Sample editor command',
+			id: 'validate-path-command',
+			name: 'Validate Path command',
 			editorCallback: (editor: Editor, view: MarkdownView) => {
-				console.log(editor.getSelection());
-				editor.replaceSelection('Sample Editor Command');
-			}
-		});
-		// This adds a complex command that can check whether the current state of the app allows execution of the command
-		this.addCommand({
-			id: 'open-sample-modal-complex',
-			name: 'Open sample modal (complex)',
-			checkCallback: (checking: boolean) => {
-				// Conditions to check
-				const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
-				if (markdownView) {
-					// If checking is true, we're simply "checking" if the command can be run.
-					// If checking is false, then we want to actually perform the operation.
-					if (!checking) {
-						new SampleModal(this.app).open();
-					}
-
-					// This command will only show up in Command Palette when the check function returns true
-					return true;
+				
+				const { projectFolder } = this.settings;
+				if (!fs.existsSync(projectFolder)) {
+					new ErrorModal(this.app).open();
+					return;
 				}
-			}
+				new Notice(`Valid path: ${this.settings.projectFolder}`);
+			},
 		});
+
 		this.addCommand({
 			id: 'push-md-command',
 			name: 'Push Markdown command',
 			editorCallback: (editor: Editor, view: MarkdownView) => {
-				const lines = editor.lineCount()
-				let text = "";
-				for (let i = 0; i < lines; i++) {
-					text += editor.getLine(i) + "\n";
+				
+				const { projectFolder } = this.settings;
+				if (!fs.existsSync(projectFolder)) {
+					new ErrorModal(this.app).open();
+					return;
 				}
-				const { obsidianFolder, projectFolder } = this.settings;
-
+				const text = editor.getDoc().getValue();
+				const projectBlogPath = path.resolve(this.settings.projectFolder, view.file.name);
 				try {
-					fs.writeFileSync(`${projectFolder}${view.file.name}`, text);
-					new Notice(`Your file has been created! At ${projectFolder}${view.file.name}`);
+					fs.writeFileSync(`${projectBlogPath}`, text, {encoding: 'utf8'});
+					new Notice(`Your file has been pushed! At ${projectBlogPath}`);
 				} catch (err) {
 					new Notice(err.message);
-					console.error(err);
 				}
 			},
 		});
@@ -98,18 +59,22 @@ export default class MyPlugin extends Plugin {
 				const projectBlogPath = path.resolve(this.settings.projectFolder, view.file.name);
 				
 				if (fs.existsSync(projectBlogPath)) {
-					// do command
-					new Notice(path.normalize("./" + view.file.path));
-					// fs.writeFileSync(view.file.path)
+					if (!checking) {
+						try {
+							const file = fs.readFileSync(projectBlogPath, 'utf8');
+							editor.getDoc().setValue(file);
+						} catch (err) {
+							new Notice(err.message);
+						}
+					}
 					return true;
 				}
-
 				return false;
 			},
 		});
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
-		this.addSettingTab(new SampleSettingTab(this.app, this));
+		this.addSettingTab(new MarkdownBloggerSettingTab(this.app, this));
 
 		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
 		// Using this function will automatically remove the event listener when this plugin is disabled.
@@ -122,7 +87,7 @@ export default class MyPlugin extends Plugin {
 	}
 
 	onunload() {
-		console.log("unloading plugin");
+
 	}
 
 	async loadSettings() {
@@ -134,14 +99,14 @@ export default class MyPlugin extends Plugin {
 	}
 }
 
-class SampleModal extends Modal {
+class ErrorModal extends Modal {
 	constructor(app: App) {
 		super(app);
 	}
 
 	onOpen() {
 		const {contentEl} = this;
-		contentEl.setText('Woah!');
+		contentEl.setText("The project folder does not exist. Please create the path or update the current path in Plugin Settings.");
 	}
 
 	onClose() {
@@ -150,10 +115,10 @@ class SampleModal extends Modal {
 	}
 }
 
-class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
+class MarkdownBloggerSettingTab extends PluginSettingTab {
+	plugin: MarkdownBlogger;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: MarkdownBlogger) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
@@ -166,20 +131,10 @@ class SampleSettingTab extends PluginSettingTab {
 		containerEl.createEl('h2', {text: 'Settings for Obsidian Markdown Blogger.'});
 
 		new Setting(containerEl)
-			.setName('Obsidian Blog Folder Path')
-			.setDesc('The Obsidian folder you keep your md blog posts in.')
+			.setName('Local Project Folder Path')
+			.setDesc('The local project folder for your blog, portfolio, or static site. Must be an absolute path.')
 			.addText(text => text
-				.setPlaceholder('blog/posts')
-				.setValue(this.plugin.settings.obsidianFolder)
-				.onChange(async (value) => {
-					this.plugin.settings.obsidianFolder = value;
-					await this.plugin.saveSettings();
-				}));
-		new Setting(containerEl)
-			.setName('Actual Blog Folder Path')
-			.setDesc('The project folder of your blog. Must be an absolute path.')
-			.addText(text => text
-				.setPlaceholder('/Users/johnsample/code-projects/astro-blog/collections')
+				.setPlaceholder('/Users/johnsample/code-projects/astro-blog/collections/')
 				.setValue(this.plugin.settings.projectFolder)
 				.onChange(async (value) => {
 					this.plugin.settings.projectFolder = value;
