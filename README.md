@@ -1,7 +1,7 @@
 # Markdown Blogger
 This plugin for [Obsidian](https://obsidian.md) allows developers to instantly push markdown notes to their local blog, portfolio, or static site project. It can be used with [Astro.js](https://astro.build), [Next.js](https://nextjs.org), or any other framework configured to render markdown pages. 
 
-![markdown-blogger-demo](/images/md-blogger-demo_AdobeExpress.gif)
+![markdown-blogger-demo](/images/md-blogger-demo.gif)
 
 Get the benefits of composing markdown notes in Obsidian without having to manually create files and copy-paste content into your local project. Also makes it much easier to keep these two files in-sync. 
 
