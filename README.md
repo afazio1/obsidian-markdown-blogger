@@ -26,7 +26,7 @@ Overwrites the current note's markdown content with the file content at location
 - If the file at location `/PROJECT_PATH/<note_name>.md` is invalid or does not exist, the content will not be pulled
 
 ### Validate Path command
-Validates the **Local Project Folder Path** in currently in settings.
+Validates the **Local Project Folder Path** currently in settings.
 - Open the command palette and search "Validate Path command"
 - A message indicating the validity of the path will be displayed 
 
