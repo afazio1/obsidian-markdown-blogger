@@ -18,8 +18,8 @@ export default class MarkdownBlogger extends Plugin {
 		await this.loadSettings();
 
 		this.addCommand({
-			id: 'validate-path-command',
-			name: 'Validate Path command',
+			id: 'validate-path',
+			name: 'Validate path',
 			editorCallback: (editor: Editor, view: MarkdownView) => {
 				
 				const { projectFolder } = this.settings;
@@ -32,8 +32,8 @@ export default class MarkdownBlogger extends Plugin {
 		});
 
 		this.addCommand({
-			id: 'push-md-command',
-			name: 'Push Markdown command',
+			id: 'push-md',
+			name: 'Push markdown',
 			editorCallback: (editor: Editor, view: MarkdownView) => {
 				
 				const { projectFolder } = this.settings;
@@ -53,8 +53,8 @@ export default class MarkdownBlogger extends Plugin {
 		});
 
 		this.addCommand({
-			id: 'pull-md-command',
-			name: 'Pull Markdown command',
+			id: 'pull-md',
+			name: 'Pull markdown',
 			editorCheckCallback: (checking: boolean, editor: Editor, view: MarkdownView) => {
 				const projectBlogPath = path.resolve(this.settings.projectFolder, view.file.name);
 			
@@ -97,7 +97,7 @@ class ErrorModal extends Modal {
 
 	onOpen() {
 		const {contentEl} = this;
-		contentEl.setText("The project folder does not exist. Please create the path or update the current path in Plugin Settings.");
+		contentEl.setText("The project folder does not exist. Please create the path or update the current path in plugin settings.");
 	}
 
 	onClose() {
@@ -122,7 +122,7 @@ class MarkdownBloggerSettingTab extends PluginSettingTab {
 		containerEl.createEl('h2', {text: 'Settings for Obsidian Markdown Blogger.'});
 
 		new Setting(containerEl)
-			.setName('Local Project Folder Path')
+			.setName('Local project folder path')
 			.setDesc('The local project folder for your blog, portfolio, or static site. Must be an absolute path.')
 			.addText(text => text
 				.setPlaceholder('/Users/johnsample/projects/astro-blog/collections/')

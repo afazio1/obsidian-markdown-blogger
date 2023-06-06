@@ -13,26 +13,26 @@ Get the benefits of composing markdown notes in Obsidian without having to manua
 After enabling the plugin, go to Markdown Blogger's settings.
 - Set the **Local Project Folder Path**. Must be an **absolute** path.
 
-### Push Markdown command
+### Push markdown command
 Creates or overwrites a file at location `/PROJECT_PATH/<note_name>.md` with the current note's markdown content.
 - Open a markdown note in editing mode
 - Open the command palette and search "Push Markdown command"
 - If the **Local Project Folder Path** is invalid or does not exist, the note will not be pushed
 
-### Pull Markdown command 
+### Pull markdown command 
 Overwrites the current note's markdown content with the file content at location `/PROJECT_PATH/<note_name>.md`
 - Open a markdown note in editing mode
 - Open the command palette and search "Pull Markdown command"
 - If the file at location `/PROJECT_PATH/<note_name>.md` is invalid or does not exist, the content will not be pulled
 
-### Validate Path command
-Validates the **Local Project Folder Path** currently in settings.
+### Validate path command
+Validates the **Local project folder path** currently in settings.
 - Open the command palette and search "Validate Path command"
 - A message indicating the validity of the path will be displayed 
 
 ## Tips & Disclaimers
 1. This is not a Version Control System like Git. Push and pull commands will overwrite the contents of the file. No history is tracked. I recommend only making changes to one file at any given time and pushing or pulling before editing a file.
-2. Triple-check your **Local Project Folder Path**. You can easily copy the **absolute** path from within VS Code by right-clicking the directory where you store your `.md` files. 
+2. Triple-check your **Local project folder path**. You can easily copy the **absolute** path from within VS Code by right-clicking the directory where you store your `.md` files. 
 	- Ex. `/Users/alexa/Desktop/code-projects/alexa-blog/src/content`
 3. Files are paired with each other (in Obsidian vs. in Project) based on their filename. As of now, if you change the filename in one place you must change it in the other. 
 4. Since the `.md` file in your project will have the same filename as the Obsidian note it was generated from, I recommend using hyphens instead of spaces when naming files.
