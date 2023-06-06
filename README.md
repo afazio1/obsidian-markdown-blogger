@@ -1,5 +1,5 @@
 # Markdown Blogger
-This plugin for [Obsidian](https://obsidian.md) allows developers to instantly push markdown notes to their local blog, portfolio, or static site project. It can be used with [Astro.js](https://astro.build), [Next.js](https://nextjs.org), or any other framework configured to render markdown pages. 
+This plugin for [Obsidian](https://obsidian.md) allows developers to instantly push markdown notes to their local blog, portfolio, or static site project. Works with [Astro.js](https://astro.build), [Next.js](https://nextjs.org), and any other framework configured to render markdown pages. 
 
 ![markdown-blogger-demo](/images/md-blogger-demo.gif)
 
@@ -25,7 +25,7 @@ Overwrites the current note's markdown content with the file content at location
 - Open the command palette and search "Pull Markdown command"
 - If the file at location `/PROJECT_PATH/<note_name>.md` is invalid or does not exist, the content will not be pulled
 
-## Validate Path command
+### Validate Path command
 Validates the **Local Project Folder Path** in currently in settings.
 - Open the command palette and search "Validate Path command"
 - A message indicating the validity of the path will be displayed 
@@ -37,3 +37,10 @@ Validates the **Local Project Folder Path** in currently in settings.
 3. Files are paired with each other (in Obsidian vs. in Project) based on their filename. As of now, if you change the filename in one place you must change it in the other. 
 4. Since the `.md` file in your project will have the same filename as the Obsidian note it was generated from, I recommend using hyphens instead of spaces when naming files.
 	- Ex. `Cool Blog Post.md` becomes `Cool-Blog-Post.md`
+
+## Say Thanks
+Hi, I'm Alexa. A developer, college student, and YouTuber.
+
+I build tools and create content because I love connecting with people. If you feel compelled to buy me a coffee that would be greatly appreciated! 🤗
+
+<a href="https://www.buymeacoffee.com/alexafazio" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
