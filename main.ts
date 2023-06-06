@@ -57,7 +57,7 @@ export default class MarkdownBlogger extends Plugin {
 			name: 'Pull Markdown command',
 			editorCheckCallback: (checking: boolean, editor: Editor, view: MarkdownView) => {
 				const projectBlogPath = path.resolve(this.settings.projectFolder, view.file.name);
-				
+			
 				if (fs.existsSync(projectBlogPath)) {
 					if (!checking) {
 						try {
@@ -75,15 +75,6 @@ export default class MarkdownBlogger extends Plugin {
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new MarkdownBloggerSettingTab(this.app, this));
-
-		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
-		// Using this function will automatically remove the event listener when this plugin is disabled.
-		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-			console.log('click', evt);
-		});
-
-		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
 	}
 
 	onunload() {
@@ -134,7 +125,7 @@ class MarkdownBloggerSettingTab extends PluginSettingTab {
 			.setName('Local Project Folder Path')
 			.setDesc('The local project folder for your blog, portfolio, or static site. Must be an absolute path.')
 			.addText(text => text
-				.setPlaceholder('/Users/johnsample/code-projects/astro-blog/collections/')
+				.setPlaceholder('/Users/johnsample/projects/astro-blog/collections/')
 				.setValue(this.plugin.settings.projectFolder)
 				.onChange(async (value) => {
 					this.plugin.settings.projectFolder = value;

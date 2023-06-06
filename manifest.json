@@ -1,11 +1,11 @@
 {
-	"id": "obsidian-markdown-blogger",
+	"id": "markdown-blogger",
 	"name": "Markdown Blogger",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Allows developers to push markdown notes to their static site. Can be used with Astro.js, Next.js, or any other framework configured to render markdown pages.",
+	"description": "Allows developers to push markdown notes to their local blog, portfolio, or static site. Works with Astro.js, Next.js, and any other framework configured to render markdown pages.",
 	"author": "Alexa Fazio",
 	"authorUrl": "https://github.com/afazio1",
-	"fundingUrl": "https://www.alexafazio.dev",
+	"fundingUrl": "https://www.buymeacoffee.com/alexafazio",
 	"isDesktopOnly": true
 }
